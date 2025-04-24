@@ -1,0 +1,77 @@
+using System;// Ultilizando o primeiro programa
+
+class Program // Identificação do programa
+{
+    static void Main() // Resposta de acordo
+    {
+         Console.Write("Nota aluno 1:"); // Escrever na tela
+         double somaaluno1;
+         // Declaração das variáveis
+         Console.Write("Digite Primeira Nota:"); 
+         double nota1 = Convert.ToDouble(Console.ReadLine());
+         
+          Console.Write("Digite Segunda Nota:");
+         double nota2 = Convert.ToDouble(Console.ReadLine());
+         
+           Console.Write("Digite Terceira Nota:");
+         double nota3 = Convert.ToDouble(Console.ReadLine());
+         
+          Console.Write("Digite Quarta Nota:");
+         double nota4 = Convert.ToDouble(Console.ReadLine());
+         
+          Console.Write("Digite Quinta Nota:");
+         double nota5 = Convert.ToDouble(Console.ReadLine());
+         
+        //Nota aluno 2
+          Console.Write("Nota aluno 2:"); // Escrever na tela
+         double somaaluno2;
+         // Declaração das variáveis
+         Console.Write("Digite Primeira Nota:"); 
+         double nota1 = Convert.ToDouble(Console.ReadLine());
+         
+          Console.Write("Digite Segunda Nota:");
+         double nota2 = Convert.ToDouble(Console.ReadLine());
+         
+           Console.Write("Digite Terceira Nota:");
+         double nota3 = Convert.ToDouble(Console.ReadLine());
+         
+          Console.Write("Digite Quarta Nota:");
+         double nota4 = Convert.ToDouble(Console.ReadLine());
+         
+          Console.Write("Digite Quinta Nota:");
+         double nota5 = Convert.ToDouble(Console.ReadLine());
+     
+         
+         // aluno 1
+         double somaaluno1= nota1 + nota2 + nota3 + nota4 + nota5;
+           double mediaaluno1 = somaaluno1 /5;
+           
+      // aluno 2
+       double somaaluno2 = nota1 + nota2 + nota3 + nota4 + nota5;
+           double mediaaluno2 = somaaluno2 /5;
+           
+           //média da sala
+           double somadenotadasala = somaaluno1 + somaaluno2;
+            double mediadasala = somadenotadasala /2;
+   
+         // Exibição aluno 1
+         Console.WriteLine();
+            Console.WriteLine("Resultado das Médias Aluno 1");
+               Console.WriteLine("A soma do aluno 1 é:" + somaaluno1);
+                        Console.WriteLine("A Média do Aluno 1 é:" + mediaaluno1);
+                         Console.WriteLine("A Média é:" + mediaaluno1);
+                          
+                          //Exibição aluno 2
+          Console.WriteLine();
+            Console.WriteLine("Resultado das Médias do Aluno 2");
+                 Console.WriteLine("A soma 1 é:" + somaaluno2);
+                         Console.WriteLine("A Média do aluno 2 é:" + mediaaluno2);
+                          
+                          //Média da sala
+                                Console.WriteLine();
+            Console.WriteLine("Resultado das Médias de Sala");
+               Console.WriteLine("A soma de Salaé:" + somadenotadasala);
+                          Console.WriteLine("A Média é:" + mediadasala);
+        
+    }
+}
