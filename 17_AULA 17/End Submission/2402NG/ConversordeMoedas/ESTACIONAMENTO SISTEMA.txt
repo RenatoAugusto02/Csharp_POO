@@ -1,0 +1,131 @@
+using System;
+using System.Collections.Generic;
+
+public class Veiculo
+{
+    public string Placa { get; set; }
+    public DateTime HoraEntrada { get; set; }
+
+    public Veiculo(string placa)
+    {
+        Placa = placa;
+        HoraEntrada = DateTime.Now;
+    }
+}
+
+public class Estacionamento
+{
+    private List<Veiculo> veiculosEstacionados = new List<Veiculo>();
+    private decimal precoPorHora;
+
+    public Estacionamento(decimal precoHora)
+    {
+        precoPorHora = precoHora;
+    }
+
+    public void RegistrarEntrada(string placa)
+    {
+        if (string.IsNullOrWhiteSpace(placa))
+        {
+            Console.WriteLine("A placa do veículo não pode ser vazia.");
+            return;
+        }
+
+        if (veiculosEstacionados.Exists(v => v.Placa.ToUpper() == placa.ToUpper()))
+        {
+            Console.WriteLine($"O veículo com placa {placa} já está estacionado.");
+            return;
+        }
+
+        Veiculo veiculo = new Veiculo(placa);
+        veiculosEstacionados.Add(veiculo);
+        Console.WriteLine($"Veículo com placa {placa} registrado com sucesso às {veiculo.HoraEntrada}.");
+    }
+
+    public void RegistrarSaida(string placa)
+    {
+        Veiculo veiculo = veiculosEstacionados.Find(v => v.Placa.ToUpper() == placa.ToUpper());
+
+        if (veiculo != null)
+        {
+            TimeSpan tempoEstacionado = DateTime.Now - veiculo.HoraEntrada;
+            decimal valorAPagar = (decimal)tempoEstacionado.TotalHours * precoPorHora;
+            veiculosEstacionados.Remove(veiculo);
+            Console.WriteLine($"Saída do veículo com placa {placa} registrada.");
+            Console.WriteLine($"Tempo estacionado: {tempoEstacionado.ToString(@"hh\:mm\:ss")}");
+            Console.WriteLine($"Valor a pagar: R$ {valorAPagar:F2}");
+        }
+        else
+        {
+            Console.WriteLine($"Não foi encontrado nenhum veículo com a placa {placa}.");
+        }
+    }
+
+    public void ListarVeiculos()
+    {
+        if (veiculosEstacionados.Count > 0)
+        {
+            Console.WriteLine("Veículos estacionados:");
+            foreach (var veiculo in veiculosEstacionados)
+            {
+                Console.WriteLine($"- Placa: {veiculo.Placa}, Entrada: {veiculo.HoraEntrada}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Não há veículos estacionados no momento.");
+        }
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8; // Para exibir o símbolo de moeda corretamente
+
+        Console.Write("Digite o preço por hora do estacionamento: R$ ");
+        if (!decimal.TryParse(Console.ReadLine(), out decimal precoHora))
+        {
+            Console.WriteLine("Valor inválido para o preço por hora.");
+            return;
+        }
+
+        Estacionamento estacionamento = new Estacionamento(precoHora);
+
+        string opcao;
+        do
+        {
+            Console.WriteLine("\n--- Menu do Estacionamento ---");
+            Console.WriteLine("1 - Registrar Entrada");
+            Console.WriteLine("2 - Registrar Saída");
+            Console.WriteLine("3 - Listar Veículos Estacionados");
+            Console.WriteLine("4 - Sair");
+            Console.Write("Escolha uma opção: ");
+            opcao = Console.ReadLine();
+
+            switch (opcao)
+            {
+                case "1":
+                    Console.Write("Digite a placa do veículo: ");
+                    string placaEntrada = Console.ReadLine();
+                    estacionamento.RegistrarEntrada(placaEntrada);
+                    break;
+                case "2":
+                    Console.Write("Digite a placa do veículo para registrar a saída: ");
+                    string placaSaida = Console.ReadLine();
+                    estacionamento.RegistrarSaida(placaSaida);
+                    break;
+                case "3":
+                    estacionamento.ListarVeiculos();
+                    break;
+                case "4":
+                    Console.WriteLine("Saindo do sistema.");
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida.");
+                    break;
+            }
+        } while (opcao != "4");
+    }
+}
