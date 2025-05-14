@@ -1,0 +1,134 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+// Modelo para um Produto
+public class Produto
+{
+    public int Id { get; set; }
+    public string Nome { get; set; }
+    public decimal Preco { get; set; }
+    public string Descricao { get; set; }
+
+    public Produto(int id, string nome, decimal preco, string descricao)
+    {
+        Id = id;
+        Nome = nome;
+        Preco = preco;
+        Descricao = descricao;
+    }
+
+    public override string ToString()
+    {
+        return $"{Nome} - R$ {Preco:F2}";
+    }
+}
+
+// Modelo para um Item no Carrinho
+public class ItemCarrinho
+{
+    public Produto Produto { get; set; }
+    public int Quantidade { get; set; }
+
+    public ItemCarrinho(Produto produto, int quantidade)
+    {
+        Produto = produto;
+        Quantidade = quantidade;
+    }
+
+    public decimal Subtotal()
+    {
+        return Produto.Preco * Quantidade;
+    }
+
+    public override string ToString()
+    {
+        return $"{Produto.Nome} x {Quantidade} - R$ {Subtotal():F2}";
+    }
+}
+
+// Modelo para o Carrinho de Compras
+public class Carrinho
+{
+    private readonly List<ItemCarrinho> _itens = new List<ItemCarrinho>();
+
+    public void AdicionarItem(Produto produto, int quantidade = 1)
+    {
+        var itemExistente = _itens.FirstOrDefault(item => item.Produto.Id == produto.Id);
+        if (itemExistente != null)
+        {
+            itemExistente.Quantidade += quantidade;
+        }
+        else
+        {
+            _itens.Add(new ItemCarrinho(produto, quantidade));
+        }
+    }
+
+    public void RemoverItem(int produtoId, int quantidade = 1)
+    {
+        var itemExistente = _itens.FirstOrDefault(item => item.Produto.Id == produtoId);
+        if (itemExistente != null)
+        {
+            itemExistente.Quantidade -= quantidade;
+            if (itemExistente.Quantidade <= 0)
+            {
+                _itens.Remove(itemExistente);
+            }
+        }
+    }
+
+    public decimal CalcularTotal()
+    {
+        return _itens.Sum(item => item.Subtotal());
+    }
+
+    public void ExibirCarrinho()
+    {
+        if (_itens.Count == 0)
+        {
+            Console.WriteLine("O carrinho está vazio.");
+            return;
+        }
+        Console.WriteLine("Itens no Carrinho:");
+        foreach (var item in _itens)
+        {
+            Console.WriteLine(item);
+        }
+        Console.WriteLine($"Total: R$ {CalcularTotal():F2}");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Criando alguns produtos
+        var produto1 = new Produto(1, "Camiseta", 29.99m, "Camiseta de algodão");
+        var produto2 = new Produto(2, "Calça Jeans", 89.50m, "Calça jeans azul");
+        var produto3 = new Produto(3, "Tênis", 120.00m, "Tênis esportivo");
+
+        // Criando um carrinho
+        var carrinho = new Carrinho();
+
+        // Adicionando itens ao carrinho
+        carrinho.AdicionarItem(produto1);
+        carrinho.AdicionarItem(produto2, 2);
+        carrinho.AdicionarItem(produto3);
+        carrinho.AdicionarItem(produto1); // Adicionando mais um da camiseta
+
+        // Exibindo o carrinho
+        carrinho.ExibirCarrinho();
+
+        // Removendo um item
+        carrinho.RemoverItem(1);
+        Console.WriteLine("\nCarrinho após remover 1 camiseta:");
+        carrinho.ExibirCarrinho();
+
+        // Removendo todos os tênis
+        carrinho.RemoverItem(3, 5); // Tentando remover mais do que tem, resultará em remoção total
+
+        Console.WriteLine("\nCarrinho após tentar remover os tênis:");
+        carrinho.ExibirCarrinho();
+    }
+}
